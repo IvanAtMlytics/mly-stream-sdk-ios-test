@@ -1,0 +1,361 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-module-flags: -target arm64-apple-ios14.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name MLYSDK
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import AVFoundation
+import AVKit
+import CommonCrypto
+import CoreTelephony
+import CryptoKit
+import Foundation
+import GCDWebServer
+@_exported import MLYSDK
+import Sentry
+import Swift
+import SwiftCentrifuge
+import SwiftProtobuf
+import UIKit
+import WebRTC
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+@_hasMissingDesignatedInitializers public class AsyncValue<T> {
+  public func close()
+  public func deliver(_ value: T)
+  #if compiler(>=5.3) && $AsyncAwait
+  public func extract() async -> T
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func extract(_ timeout: Foundation.TimeInterval) async -> T?
+  #endif
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class AVPlayerTool {
+  public static func remainBufferedTime(_ currentItem: AVFoundation.AVPlayerItem?, _ currentTime: CoreMedia.CMTime) -> Swift.Double
+  public static func maxLoadedTime(_ currentItem: AVFoundation.AVPlayerItem?, _ currentTime: CoreMedia.CMTime) -> CoreMedia.CMTime
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Condition {
+  @objc deinit
+  #if compiler(>=5.3) && $AsyncAwait
+  public func done() async
+  #endif
+  public func pass(_ error: (any Swift.Error)? = nil)
+  public func deny(_ error: any Swift.Error)
+}
+public protocol MP4DownloadTaskDelegate : ObjectiveC.NSObject {
+  func urlTaskSession(_ session: Foundation.URLSession, task: Foundation.URLSessionTask, didCompleteWithError error: (any Swift.Error)?)
+  func urlTaskSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive response: Foundation.URLResponse, completionHandler: @escaping (Foundation.URLSession.ResponseDisposition) -> Swift.Void)
+  func urlTaskSession(_ session: Foundation.URLSession, dataTask: Foundation.URLSessionDataTask, didReceive data: Foundation.Data)
+}
+@objc public class DownloadTask : ObjectiveC.NSObject {
+  public var requestHeaders: [Swift.String : Swift.String]
+  public var response: Foundation.HTTPURLResponse?
+  public var error: (any Swift.Error)?
+  public var contentType: Swift.String?
+  public var contentLength: Swift.Int
+  public var status: MLYSDK.DownloadTaskState
+  public var rangeCombiner: MLYSDK.RangeCombiner {
+    get
+    set
+  }
+  public var delegate: (any MLYSDK.MP4DownloadTaskDelegate)?
+  public var isCompleted: Swift.Bool {
+    get
+  }
+  public var headerReady: MLYSDK.AsyncValue<Swift.Bool> {
+    get
+    set
+  }
+  public var bodyReady: MLYSDK.AsyncValue<Swift.Bool> {
+    get
+    set
+  }
+  public init(_ url: Foundation.URL, _ requestHeaders: [Swift.String : Swift.String] = [:])
+  public func cancel()
+  public func start()
+  @objc deinit
+}
+public enum DownloadTaskState {
+  case unknowed, running, success, error, cancelled
+  public static func == (a: MLYSDK.DownloadTaskState, b: MLYSDK.DownloadTaskState) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class MLYDriverOptions : ObjectiveC.NSObject {
+  @objc public var client: MLYSDK.MLYClientOptions
+  @objc public var server: MLYSDK.MLYServerOptions
+  @objc public var debug: Swift.Bool
+  @objc public var muxSampleRate: Swift.Double
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class MLYClientOptions : ObjectiveC.NSObject {
+  @objc public var id: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class MLYServerOptions : ObjectiveC.NSObject {
+  @objc public var host: MLYSDK.MLYServerSetting
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class MLYServerSetting : ObjectiveC.NSObject {
+  @objc public var fqdn: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class HashTool {
+  public static func SHA256Base64URL(_ string: Swift.String?) -> Swift.String?
+  public static func makeMD5Base16String(_ string: Swift.String) -> Swift.String
+  @objc deinit
+}
+public class HLSContext {
+  public var id: Swift.String
+  public init()
+  @objc deinit
+  public func setOrigin(_ url: Foundation.URL)
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class HLSProxy : ObjectiveC.NSObject, GCDWebServerDelegate {
+  public static var instance: MLYSDK.HLSProxy
+  public var port: Swift.Int
+  public func start()
+  @objc deinit
+}
+public class HLSRequest {
+  public var error: (any Swift.Error)?
+  public var rangeCombiner: MLYSDK.RangeCombiner
+  public var response: Foundation.HTTPURLResponse?
+  public var isSuccess: Swift.Bool
+  public var isCompleted: Swift.Bool {
+    get
+  }
+  public init(_ url: Foundation.URL, _ id: Swift.String, _ requestHeaders: [Swift.String : Swift.String])
+  public var swarmID: Swift.String!
+  public var swarmURI: Swift.String!
+  #if compiler(>=5.3) && $AsyncAwait
+  public func from() async -> Swift.Bool
+  #endif
+  @objc deinit
+}
+public struct AssetSettings : Swift.Codable {
+  public var id: Swift.String?
+  public var tags: [Swift.String]?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public struct PlatformConfigResponse : Swift.Codable {
+  public var algorithm_id: Swift.String?
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class KernelSettings {
+  public static var instance: MLYSDK.KernelSettings
+  public var client: MLYSDK.ClientSettings
+  public var proxy: MLYSDK.ProxySettings
+  public var platforms: MLYSDK.PlatformConfigResponse
+  public var muxEnvKey: MLYSDK.AsyncValue<Swift.String>
+  public var isMuxEnabled: Swift.Bool?
+  public var muxSampleRate: Swift.Double
+  public var stream_type: Swift.String
+  public var assets: [Swift.String : MLYSDK.AssetSettings]
+  @objc deinit
+}
+public struct ClientSettings {
+  public var id: Swift.String?
+  public var sessionID: Swift.String?
+  public var org_id: Swift.String
+}
+public struct ProxySettings {
+  public var host: Swift.String
+}
+@_hasMissingDesignatedInitializers public class Logger {
+  public func trace(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  public static func track(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  public static func debug(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  public static func info(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  public static func warn(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  public static func error(_ message: Swift.String? = nil, _ params: MLYSDK.LogParams? = nil, _ options: MLYSDK.LogOptions? = nil)
+  @objc deinit
+}
+public typealias LogParams = [Swift.String : Any]
+public struct LogOptions : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objcMembers public class Math {
+  public static func max<T>(_ a: T, _ b: T) -> T where T : Swift.Comparable
+  public static func min<T>(_ a: T, _ b: T) -> T where T : Swift.Comparable
+  @objc public static func random() -> Swift.Double
+  @objc public static func random(_ n: Swift.Int) -> Swift.Int
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class CDN : Swift.Codable, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public static func initCDNs(_ host: Swift.String)
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class CDNOriginKeeper {
+  public static var host: Swift.String?
+  public static var origin: Swift.String?
+  public static var swarmID: Swift.String?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MeteringHandler {
+  public static var instance: MLYSDK.MeteringHandler
+  #if compiler(>=5.3) && $AsyncAwait
+  public func submit() async
+  #endif
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MeteringP2PHandler {
+  public static var instance: MLYSDK.MeteringP2PHandler
+  #if compiler(>=5.3) && $AsyncAwait
+  public func submit() async
+  #endif
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class Point : Swift.Codable, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var x: Swift.String
+  public var y: Swift.Int64
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+public class MLYChart {
+  public init()
+  public var chart: [Swift.String : [MLYSDK.MLYCharPoint]]
+  public var chartScore: [Swift.String : [MLYSDK.MLYCharPoint]]
+  public func activate()
+  public func deactivate()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MLYCharPoint : Swift.Codable, Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public var chart_x: Swift.String
+  public var chart_y: Swift.Double
+  @objc deinit
+  public func encode(to encoder: any Swift.Encoder) throws
+  required public init(from decoder: any Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class MLYData {
+  public static var instance: MLYSDK.MLYData
+  public var token: Swift.String?
+  public var peerID: Swift.String?
+  public var swarmID: Swift.String?
+  public var swarmUserCount: Swift.Int?
+  public var otherPeerID: Swift.String?
+  public var webrtcState: Swift.Bool
+  public var centrifugeState: Swift.Bool
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers @objcMembers public class MLYDriver : ObjectiveC.NSObject {
+  @objc public static let VERSION: Swift.String
+  @objc public static let MLYSERSION: Swift.String
+  @objc override dynamic public init()
+  @objc public static func initialize(_ closure: (MLYSDK.MLYDriverOptions) -> ()) throws
+  @objc public static func activate() throws
+  @objc public static func deactivate()
+  @objc public static func test1()
+  @objc public static func test2()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class MLYError : Swift.Error {
+  public static let IllegalURLFormat: MLYSDK.MLYError
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class ProxyTool {
+  public static func replaceProxyURL(_ url: Foundation.URL, _ port: Swift.Int, _ context: Swift.String) -> Foundation.URL?
+  public static var origin: Swift.String?
+  public static var swarmURI: Swift.String?
+  public static var swarmID: Swift.String?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class ProxyURLModifier {
+  public static func replace(_ url: Swift.String) throws -> Foundation.URL
+  @objc deinit
+}
+public enum ProxyURLModifierError : Swift.Error {
+  case IllegalURLFormat
+  case ExceptionInInitializerError
+  public static func == (a: MLYSDK.ProxyURLModifierError, b: MLYSDK.ProxyURLModifierError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol Deque {
+  associatedtype Element
+  var first: Self.Element? { get }
+  var last: Self.Element? { get }
+  var size: Swift.Int { get }
+  var isEmpty: Swift.Bool { get }
+  func append(_ element: Self.Element)
+  func insert(_ element: Self.Element)
+  func removeFirst() -> Self.Element?
+  func removeLast() -> Self.Element?
+  func removeAll()
+}
+@_hasMissingDesignatedInitializers public class DoubleDequeItem<Element> {
+  @objc deinit
+}
+public typealias Queue = MLYSDK.DoubleDeque
+@_hasMissingDesignatedInitializers public class DoubleDeque<Element> : MLYSDK.Deque {
+  public var size: Swift.Int
+  public var isEmpty: Swift.Bool {
+    get
+  }
+  public var first: Element? {
+    get
+  }
+  public var last: Element? {
+    get
+  }
+  public func append(_ array: [Element]?)
+  public func append(_ element: Element)
+  public func insert(_ element: Element)
+  public func removeFirst() -> Element?
+  public func removeLast() -> Element?
+  public func removeAll()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class RangeCombiner {
+  public var data: Foundation.Data
+  public var condition: MLYSDK.Condition
+  #if compiler(>=5.3) && $AsyncAwait
+  public func more(_ sent: Swift.Int) async throws -> Foundation.Data
+  #endif
+  @objc deinit
+}
+public class ResourceRange : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+  public func from(_ header: Swift.String)
+  public init(start: Swift.Int = -1, end: Swift.Int = -1)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class StringTool {
+  public static func format(_ format: Swift.String, _ value: Swift.Double) -> Swift.String
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class TimeTool {
+  public static func makeNowFstring(_ format: Swift.String) -> Swift.String
+  @objc deinit
+}
+extension MLYSDK.DownloadTaskState : Swift.Equatable {}
+extension MLYSDK.DownloadTaskState : Swift.Hashable {}
+extension MLYSDK.ProxyURLModifierError : Swift.Equatable {}
+extension MLYSDK.ProxyURLModifierError : Swift.Hashable {}
